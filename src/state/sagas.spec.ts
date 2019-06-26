@@ -1,4 +1,4 @@
-import { processClick } from '../state/sagas'
+import mainSaga, { processClick } from '../state/sagas'
 import { expectSaga } from 'redux-saga-test-plan'
 import { call } from 'redux-saga/effects'
 import { ServerApi } from '../api/ServerApi'
@@ -7,6 +7,8 @@ import rootReducer, { Actions } from './rootReducer'
 import { IState } from './IState'
 
 describe('When click', () => {
+	expectSaga.DEFAULT_TIMEOUT = 50
+
 	it('should increment click counter (behaviour test)', () => {
 		const saga = processClick()
 
@@ -14,16 +16,15 @@ describe('When click', () => {
 
 		const put = saga.next(10)
 
-		const res = saga.next()
-
+		expect((call.value.payload as any).fn).toBe(ServerApi.SendClick)
 		expect((put.value.payload as any).action.payload).toBe(10)
 	})
 
-	it('should incremet click counter (behaviour test with test-plan)', () => {
-		const callToSendBrilliantClickReturns1: StaticProvider = [call(ServerApi.SendClick), 2]
+	it('should increment click counter (behaviour test with test-plan)', () => {
+		const callToSendClickReturnsValue: StaticProvider = [call(ServerApi.SendClick), 2]
 
 		return expectSaga(processClick)
-			.provide([callToSendBrilliantClickReturns1])
+			.provide([callToSendClickReturnsValue])
 
 			.dispatch(Actions.click())
 
@@ -33,34 +34,53 @@ describe('When click', () => {
 			.run()
 	})
 
-	it('should incremet click counter (state test with test-plan)', () => {
-		const callToSendClickReturns1: StaticProvider = [call(ServerApi.SendClick), 14]
+	it('should increment click counter (state test with test-plan)', () => {
+		const callToSendClickReturnsValue: StaticProvider = [call(ServerApi.SendClick), 14]
 
 		const initialState: IState = {
 			clickCount: 11,
 		}
 
 		return expectSaga(processClick)
-			.provide([callToSendClickReturns1])
+			.provide([callToSendClickReturnsValue])
 			.withReducer(rootReducer, initialState)
 
 			.dispatch(Actions.click())
 
-			.silentRun()
+			.run()
 			.then(result => expect(result.storeState.clickCount).toBe(14))
 	})
 
-	it('should incremet click counter (state test with test-plan async-way)', async () => {
-		const callToSendClickReturns1: StaticProvider = [call(ServerApi.SendClick), 14]
+	it('should increment click counter (state test with test-plan async-way)', async () => {
+		const callToSendClickReturnsValue: StaticProvider = [call(ServerApi.SendClick), 14]
 		const initialState: IState = {
 			clickCount: 11,
 		}
 		const saga = expectSaga(processClick)
-			.provide([callToSendClickReturns1])
+			.provide([callToSendClickReturnsValue])
 			.withReducer(rootReducer, initialState)
 
-		const result = await saga.dispatch(Actions.click()).silentRun()
+		const result = await saga.dispatch(Actions.click()).run()
 
 		expect(result.storeState.clickCount).toBe(14)
+	})
+
+	it('should increment click counter (silent integration test)', async () => {
+		const callToSendClickReturnsValue: StaticProvider = [call(ServerApi.SendClick), 14]
+		const callToSendUnclickReturnsValue: StaticProvider = [call(ServerApi.SendUnclick), 18]
+		const initialState: IState = {
+			clickCount: 11,
+		}
+
+		const saga = expectSaga(mainSaga)
+			.provide([callToSendClickReturnsValue, callToSendUnclickReturnsValue])
+			.withReducer(rootReducer, initialState)
+
+		const result = await saga
+			.dispatch(Actions.click())
+			.dispatch(Actions.unclick())
+			.silentRun()
+
+		expect(result.storeState.clickCount).toBe(18)
 	})
 })

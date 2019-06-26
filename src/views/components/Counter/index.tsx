@@ -9,6 +9,7 @@ interface IStateProps {
 
 interface IDispatchProps {
 	click: () => void
+	unclick: () => void
 }
 
 type IProps = IStateProps & IDispatchProps
@@ -18,7 +19,8 @@ const Button = (props: IProps) => {
 		<>
 			<div>{props.clickCount}</div>
 			<div>
-				<button onClick={props.click}>Кнопка</button>
+				<button onClick={props.click}>Click</button>
+				<button onClick={props.unclick}>Unclick</button>
 			</div>
 		</>
 	)

@@ -1,23 +1,29 @@
 import { IState } from './IState'
 
 export enum ActionTypes {
-	BRILLIANT_CLICK = 'BRILLIANT_CLICK',
-	BRILLIANT_CLICK_SUCCESS = 'BRILLIANT_CLICK_SUCCESS',
+	CLICK = 'CLICK',
+	UNCLICK = 'UNCLICK',
+	CLICK_UNCLICK_SUCCESS = 'CLICK_UNCLICK_SUCCESS',
 }
 
-export interface BrilliantClickAction {
-	type: ActionTypes.BRILLIANT_CLICK
+export interface ClickAction {
+	type: ActionTypes.CLICK
 }
 
-export interface BrilliantClickSuccessAction {
-	type: ActionTypes.BRILLIANT_CLICK_SUCCESS
+export interface UnclickAction {
+	type: ActionTypes.UNCLICK
+}
+
+export interface ClickSuccessAction {
+	type: ActionTypes.CLICK_UNCLICK_SUCCESS
 	payload: number
 }
 
 export const Actions = {
-	click: (): BrilliantClickAction => ({ type: ActionTypes.BRILLIANT_CLICK }),
-	clickSuccess: (clicksCount: number): BrilliantClickSuccessAction => ({
-		type: ActionTypes.BRILLIANT_CLICK_SUCCESS,
+	click: (): ClickAction => ({ type: ActionTypes.CLICK }),
+	unclick: (): UnclickAction => ({ type: ActionTypes.UNCLICK }),
+	clickSuccess: (clicksCount: number): ClickSuccessAction => ({
+		type: ActionTypes.CLICK_UNCLICK_SUCCESS,
 		payload: clicksCount,
 	}),
 }
@@ -27,7 +33,7 @@ const initialState: IState = {
 }
 
 export default function rootReducer(state: IState = initialState, action: any) {
-	if (action.type === ActionTypes.BRILLIANT_CLICK_SUCCESS) {
+	if (action.type === ActionTypes.CLICK_UNCLICK_SUCCESS) {
 		return { ...state, clickCount: action.payload }
 	}
 
