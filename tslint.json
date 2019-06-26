@@ -1,0 +1,47 @@
+{
+	"extends": ["tslint:latest", "tslint-react", "tslint-config-prettier"],
+	"rules": {
+		"jsx-no-multiline-js": false,
+		"indent": [true, "tabs", 4],
+		"semicolon": [true, "never"],
+		"quotemark": [true, "single", "jsx-double"],
+		"ordered-imports": false,
+		"no-submodule-imports": false,
+		"align": false,
+		"no-namespace": true,
+		"only-arrow-functions": false,
+		"object-literal-sort-keys": false,
+		"no-shadowed-variable": false,
+		"arrow-parens": [true, "ban-single-arg-parens"],
+		"member-ordering": [
+			true,
+			{
+				"order": [
+					"static-field",
+					"instance-field",
+					"constructor",
+					"private-instance-method",
+					"protected-instance-method"
+				]
+			}
+		],
+		"no-implicit-dependencies": false,
+		"prefer-conditional-expression": false,
+		"no-object-literal-type-assertion": false,
+		"max-line-length": false,
+		"no-var-requires": false,
+		"no-empty-interface": false,
+		"interface-name": false,
+		"no-duplicate-imports": true,
+
+		"jsdoc-format": false,
+		"no-redundant-jsdoc": true,
+
+		"jsx-no-string-ref": true,
+		"jsx-no-lambda": true,
+		"jsx-wrap-multiline": false
+	},
+	"linterOptions": {
+		"exclude": ["**/*.json"]
+	}
+}
